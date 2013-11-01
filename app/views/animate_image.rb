@@ -1,28 +1,36 @@
 class AnimateImage < UIImageView
   def sprites
-   ["s1.png", "s2.png", "s3.png", "s4.png",
-    "s5.png", "s6.png", "s7.png", "s8.png",
-    "s9.png", "s10.png", "s11.png", "s12.png",
-    "s13.png", "s14.png", "s15.png", "s16.png","s17.png"]
-  end
-
-  def image_load(image_name)
-    UIImage.imageNamed("images/sprites/#{name}")
-  end
-
-  def image_array
-    sprites.map{|name| image_load(name) unless name.nil?}
+    [
+      UIImage.imageNamed("images/sprites/s1.png"),
+      UIImage.imageNamed("images/sprites/s2.png"),
+      UIImage.imageNamed("images/sprites/s3.png"),
+      UIImage.imageNamed("images/sprites/s4.png"),
+      UIImage.imageNamed("images/sprites/s5.png"),
+      UIImage.imageNamed("images/sprites/s6.png"),
+      UIImage.imageNamed("images/sprites/s7.png"),
+      UIImage.imageNamed("images/sprites/s8.png"),
+      UIImage.imageNamed("images/sprites/s9.png"),
+      UIImage.imageNamed("images/sprites/s10.png"),
+      UIImage.imageNamed("images/sprites/s11.png"),
+      UIImage.imageNamed("images/sprites/s12.png"),
+      UIImage.imageNamed("images/sprites/s13.png"),
+      UIImage.imageNamed("images/sprites/s14.png"),
+      UIImage.imageNamed("images/sprites/s15.png"),
+      UIImage.imageNamed("images/sprites/s16.png"),
+      UIImage.imageNamed("images/sprites/s17.png")
+    ]
   end
 
   def set_animation
-    self.animationImages = image_array
-#    self.animationDuration = 10
-    self.contentMode = UIViewContentModeBottomLeft;
+    self.animationImages = sprites
+    self.animationDuration = 1
+    self.animationRepeatCount = -1
   end
 
   def self.create
     animated_image = alloc.initWithFrame([position,size_image]);
     animated_image.set_animation
+    animated_image.startAnimating
     animated_image
   end
 

@@ -2,7 +2,7 @@ module Auth
   #method that should be call it for register a user
   def register_action
     waiting_view
-    if has_enough_data?
+    if has_enough_data_register?
       url = ApiUrl.new.register_url
       conection(url,data_login_user)
     else
@@ -11,10 +11,11 @@ module Auth
     end
     hide_waiting_view
   end
+
   #method that should be call it for log in a user
   def login_action
     waiting_view
-    if has_enough_data?
+    if has_enough_data_login?
       url = ApiUrl.new.login_url
       conection(url,data_login_user)
     else
@@ -24,17 +25,15 @@ module Auth
     hide_waiting_view
   end
 
-  def data_login_user
-    raise "data_login_user MUST BE IMPLEMENTED"
+  def has_enough_data_login?
+    if email_field.nil? and password_field.nil?
+      raise "You need define email and password field"
+    end
+    email_field.text != "" && password_field.text != ""    
   end
-  
-  def data_create_user
-    raise "data_create_user MUST BE IMPLEMENTED"
-  end
-  
+
   def has_enough_data?
-    raise "has_enough_data? should be implemented"
-    @email_field.text != "" && @password_field.text != ""
+    raise "has_enough_data? should be implemented"    
   end
 
 
@@ -82,6 +81,32 @@ module Auth
 
   def other_error
     App.alert("Unknow error")
+  end
+
+  def email_field
+    raise "should be implemented"
+  end
+
+  def login_field
+    raise "should be implemented"
+  end
+  def password_field
+    raise "should be implemented"
+  end
+  def password_confirmation_field
+    raise "should be implemented"
+  end
+
+  def data_login_user
+    raise "data_login_user MUST BE IMPLEMENTED"
+  end
+  
+  def data_create_user
+    raise "data_create_user MUST BE IMPLEMENTED"
+  end
+  
+  def errors
+    raise "errors should be implemented"
   end
 
   private 

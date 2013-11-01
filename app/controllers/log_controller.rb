@@ -23,19 +23,30 @@ class LogController < UIViewController
     view.addSubview(@email)
     view.addSubview(@password)
   end
-  def has_enough_data?
-    false
-  end
 
+  ######
+  # Need define methods for get email and password methods
+  ######
+  def email_field ; @email ; end
+  
+  def password_field ; @password ;end
+
+  ####
+  #  Wating actions
+  ####
   def waiting_view
     @background = WaitingView.create
     view.addSubview(@background)
   end
 
   def hide_waiting_view
-#    @background.delete
+    @background.removeFromSuperview
   end
 
+
+  #### 
+  # Others methods
+  ####
   def touchesBegan(touches,withEvent: event) 
     self.view.endEditing(true)
   end

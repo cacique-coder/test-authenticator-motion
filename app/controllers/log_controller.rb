@@ -29,10 +29,7 @@ class LogController < UIViewController
 
   def waiting_view
     @background = WaitingView.create
-    @icon = AnimateImage.create
     view.addSubview(@background)
-    view.addSubview(@icon)
-    @icon.startAnimating
   end
 
   def hide_waiting_view

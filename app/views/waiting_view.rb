@@ -2,16 +2,14 @@ class WaitingView < UIView
   def self.create
     @background = WaitingView.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     @background.set_background_color
-#    @background.set_icon_waiting 
+    @background.set_icon_waiting 
     @background
   end
 
   def set_icon_waiting
-    self.addSubview(@icon)
-  end
-
-  def animate
+    @icon = AnimateImage.create
     @icon.startAnimating
+    self.addSubview(@icon)
   end
 
   def set_background_color

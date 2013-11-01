@@ -4,6 +4,7 @@ class LogController < UIViewController
   def viewDidLoad
     super
     view.backgroundColor = UIColor.colorWithWhite(1,alpha: 1)
+    view.name = "hola"
     form
   end
 
@@ -21,6 +22,21 @@ class LogController < UIViewController
     view.addSubview(@facebook)
     view.addSubview(@email)
     view.addSubview(@password)
+  end
+  def has_enough_data?
+    false
+  end
+
+  def waiting_view
+    @background = WaitingView.create
+    @icon = AnimateImage.create
+    view.addSubview(@background)
+    view.addSubview(@icon)
+    @icon.startAnimating
+  end
+
+  def hide_waiting_view
+#    @background.delete
   end
 
   def touchesBegan(touches,withEvent: event) 

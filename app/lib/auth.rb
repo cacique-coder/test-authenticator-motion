@@ -1,6 +1,7 @@
 module Auth
   #method that should be call it for register a user
   def register_action
+    waiting_view
     if has_enough_data?
       url = ApiUrl.new.register_url
       conection(url,data_login_user)
@@ -8,9 +9,11 @@ module Auth
       App.alert("All fields are required")
       after_conection
     end
+    hide_waiting_view
   end
   #method that should be call it for log in a user
   def login_action
+    waiting_view
     if has_enough_data?
       url = ApiUrl.new.login_url
       conection(url,data_login_user)
@@ -18,6 +21,7 @@ module Auth
       App.alert("All fields are required")
       after_conection
     end
+    hide_waiting_view
   end
 
   def data_login_user
@@ -100,6 +104,10 @@ module Auth
     thread = NSThread.alloc.initWithTarget action, selector:"call", object:nil
     thread.start
   end  
+
+  def waiting_view
+    raise "waiting_view should be implemented"
+  end
 
   def parse response
     BW::JSON.parse(response.body)

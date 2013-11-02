@@ -4,11 +4,12 @@ module Auth
     def register_action
       waiting_view
       if has_enough_data_register?
-        conection(url_register,data_register_user)
+        response = conection(url_register,data_register_user)
       else
         App.alert("All fields are required")
       end
       hide_waiting_view
+      success_conection_register.call(response) unless response.nil?
     end
 
     #method that should be call it for log in a user
@@ -16,11 +17,12 @@ module Auth
     def login_action
       waiting_view
       if has_enough_data_login?
-        conection(url_log_in,data_login_user)
+        response = conection(url_log_in,data_login_user)
       else
         App.alert("All fields are required")
       end
       hide_waiting_view
+      success_conection_login.call(response) unless response.nil?
     end
 
     def has_enough_data_login?
@@ -40,10 +42,10 @@ module Auth
 
 
     def errors_model(response)
-      message = parse(response)
+      message_json = parse(response)
       messages=""
-      message["errors"].each do |field,message|
-        messages = "#{field}: #{message.join("\n")}"
+      message_json["errors"].each do |field,message_array|
+        messages = " #{messages}\n #{field}: #{message_array.join("\n")}"
       end
       App.alert(messages)
     end
@@ -121,30 +123,36 @@ module Auth
 
     ##############
     # failed conection, should be a lambda
-    #
     ###
     def failed_conection
       lambda do |response|
         if response.status_code.to_s =~ /40\d/
-          App.alert("Login failed")
+          message = "Login failed"
         else
-          App.alert(response.error_message)
+          message = response.error_message
         end
+        App.alert(message)
       end 
     end
 
+    def success_conection_register
+      lambda{|response| App.alert('Good, user register. May be you need change this :-) ')}      
+    end
+
+    def success_conection_login
+     lambda{|response| App.alert('Good, user login. May be you need change this :-) ')}
+    end
     private 
 
     def conection(url,data)
       BW::HTTP.post(url, {payload: data} ) do |response|
         if response.ok?
-          json = parse(response)
-          success = true
+          @json = parse(response)
         else 
           failed_conection.call(response)
         end
-        json if success
       end
+      @json
     end
 
     def parse response

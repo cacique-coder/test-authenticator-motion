@@ -12,6 +12,7 @@ module Auth
     end
 
     #method that should be call it for log in a user
+
     def login_action
       waiting_view
       if has_enough_data_login?
@@ -119,12 +120,17 @@ module Auth
     end
 
     ##############
-    #
     # failed conection, should be a lambda
     #
     ###
-    def failed_conection(response)
-      raise "should be implemented like a lambda"
+    def failed_conection
+      lambda do |response|
+        if response.status_code.to_s =~ /40\d/
+          App.alert("Login failed")
+        else
+          App.alert(response.error_message)
+        end
+      end 
     end
 
     private 
@@ -133,11 +139,11 @@ module Auth
       BW::HTTP.post(url, {payload: data} ) do |response|
         if response.ok?
           json = parse(response)
-          success? = true
+          success = true
         else 
           failed_conection.call(response)
         end
-        json if success?
+        json if success
       end
     end
 

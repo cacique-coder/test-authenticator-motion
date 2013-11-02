@@ -4,7 +4,6 @@ class LogController < UIViewController
   def viewDidLoad
     super
     view.backgroundColor = UIColor.colorWithWhite(1,alpha: 1)
-    view.name = "hola"
     form
   end
 
@@ -26,13 +25,20 @@ class LogController < UIViewController
   end
 
 
+  #########
+  #  format data for send to server
+  ####
   def data_login_user
     {user:{email: @email.text, password:@password.text}}
   end
 
+  #####
+  ## URL connection for login
+  ######
   def url_log_in
-    "http://0.0.0.0:3000"
+    "http://0.0.0.0:3000/users/login"
   end
+
   ######
   # Need define methods for get email and password methods
   ######

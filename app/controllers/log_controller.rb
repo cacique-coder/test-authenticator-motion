@@ -26,6 +26,13 @@ class LogController < UIViewController
   end
 
 
+  def data_login_user
+    {user:{email: @email.text, password:@password.text}}
+  end
+
+  def url_log_in
+    "http://0.0.0.0:3000"
+  end
   ######
   # Need define methods for get email and password methods
   ######

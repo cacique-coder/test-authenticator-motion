@@ -1,5 +1,5 @@
 class LogController < UIViewController
-  include Auth
+  include Auth::EmailLogin
 
   def viewDidLoad
     super
@@ -11,8 +11,9 @@ class LogController < UIViewController
   def form
     @email = UIInputAuth.create([50,50])
     @password = UIInputAuth.create([50,100],secure: true)
+    
     @submit_login = UIButtonGray.create([50,150],text:"Login with Email")
-    @submit_register = UIButtonGray.create([50,200],text:"Login with Email")
+    @submit_register = UIButtonGray.create([50,200],text:"Register with Email")
     @facebook = UIButtonGray.create([50,250],text:"Submit With Facebook")
     
     @submit_login.addTarget(self,action: :login_action,forControlEvents: UIControlEventTouchUpInside)
@@ -24,12 +25,15 @@ class LogController < UIViewController
     view.addSubview(@password)
   end
 
+
   ######
   # Need define methods for get email and password methods
   ######
-  def email_field ; @email ; end
-  
+  def user_field ; @email ; end
+
   def password_field ; @password ;end
+
+  def password_confirmation_field ; @password_confirmation ;end
 
   ####
   #  Wating actions

@@ -4,11 +4,9 @@ module Auth
     def register_action
       waiting_view
       if has_enough_data_register?
-        url = ApiUrl.new.register_url
-        conection(url,data_login_user)
+        conection(url_register,data_register_user)
       else
         App.alert("All fields are required")
-        after_conection
       end
       hide_waiting_view
     end
@@ -17,11 +15,9 @@ module Auth
     def login_action
       waiting_view
       if has_enough_data_login?
-        url = ApiUrl.new.login_url
-        conection(url,data_login_user)
+        conection(url_log_in,data_login_user)
       else
         App.alert("All fields are required")
-        after_conection
       end
       hide_waiting_view
     end
@@ -30,7 +26,7 @@ module Auth
       if user_field.nil? or password_field.nil?
         raise "You need define email and password field"
       end
-      user_field.text != "" && password_field.text != ""
+      user_valid? and password_field_simple?
     end
 
 
@@ -38,7 +34,7 @@ module Auth
       if user_field.nil? or password_field.nil? or password_confirmation_field.nil? 
         raise "You need define email, password and password confirmation field"
       end
-      user_field.text != "" && password_field.text != ""
+      user_valid? and password_register_valid?
     end
 
 
@@ -49,16 +45,33 @@ module Auth
         messages = "#{field}: #{message.join("\n")}"
       end
       App.alert(messages)
+    end
 
+    def user_valid?
+      user_field.text != ""
+    end
+
+    def password_field_simple?
+      password_field.text != ""
+    end
+
+    def password_register_valid?
+      password_field.text != "" and password_confirmation_field.text == password_field.text
     end
     
-    def before_conection ; end
-
     def after_conection ; end
 
     def other_error
       App.alert("Unknow error")
     end
+
+    ####
+    #   This methods should be implemented like a getters. example:
+    #   def user_field
+    #     @field #should be UITextField
+    #   end
+    ###
+
 
     def user_field
       raise "should be implemented"
@@ -67,9 +80,11 @@ module Auth
     def login_field
       raise "should be implemented"
     end
+
     def password_field
       raise "should be implemented"
     end
+
     def password_confirmation_field
       raise "should be implemented"
     end
@@ -86,29 +101,44 @@ module Auth
       raise "errors should be implemented"
     end
 
-    private 
+    ###########################
+    ## Methods for conections
+    ###########################
 
-    def conection(url)
-      before_conection
-      action = lambda do
-        runLoop = NSRunLoop.currentRunLoop    
-          BW::HTTP.post(url, {payload: data} ) do |response|
-            if response.ok?
-              json = parse(response)
-              success = true
-            else 
-              response.status_code == 422 ? errors_model(response) : other_error
-            end
-            success if success
-          end
-          runLoop.run
-      end
-      thread = NSThread.alloc.initWithTarget action, selector:"call", object:nil
-      thread.start
-    end  
+    def url_log_in
+      raise 'should be implemented'
+    end
+
+    def url_register
+      raise 'should be implemented'
+    end
+
 
     def waiting_view
       raise "waiting_view should be implemented"
+    end
+
+    ##############
+    #
+    # failed conection, should be a lambda
+    #
+    ###
+    def failed_conection(response)
+      raise "should be implemented like a lambda"
+    end
+
+    private 
+
+    def conection(url,data)
+      BW::HTTP.post(url, {payload: data} ) do |response|
+        if response.ok?
+          json = parse(response)
+          success? = true
+        else 
+          failed_conection.call(response)
+        end
+        json if success?
+      end
     end
 
     def parse response

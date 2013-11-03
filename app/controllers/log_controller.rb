@@ -1,5 +1,6 @@
 class LogController < UIViewController
   include Auth::EmailLogin
+  include Auth::FacebookManager
 
   def viewDidLoad
     super
@@ -16,7 +17,8 @@ class LogController < UIViewController
     @facebook = UIButtonGray.create([50,250],text:"Submit With Facebook")
     
     @submit_login.addTarget(self,action: :login_action,forControlEvents: UIControlEventTouchUpInside)
-    
+    @facebook.addTarget(self,action: :login_with_facebook,forControlEvents: UIControlEventTouchUpInside)
+        
     view.addSubview(@submit_register)
     view.addSubview(@submit_login)
     view.addSubview(@facebook)

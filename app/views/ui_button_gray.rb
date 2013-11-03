@@ -8,6 +8,6 @@ class UIButtonGray < UIButton
 
   private
   def self.size
-    [150,30]
+    [200,30]
   end
 end

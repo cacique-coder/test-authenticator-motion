@@ -6,10 +6,10 @@ module Auth
       if has_enough_data_register?
         response = conection(url_register,data_register_user)
       else
-        App.alert("All fields are required")
+        custom_message("All fields are required")
+        hide_waiting_view
       end
-      hide_waiting_view
-      success_conection_register.call(response) unless response.nil?
+
     end
 
     #method that should be call it for log in a user
@@ -19,10 +19,9 @@ module Auth
       if has_enough_data_login?
         response = conection(url_log_in,data_login_user)
       else
-        App.alert("All fields are required")
+        custom_message("All fields are required")
+        hide_waiting_view
       end
-      hide_waiting_view
-      success_conection_login.call(response) unless response.nil?
     end
 
     def has_enough_data_login?
@@ -47,7 +46,7 @@ module Auth
       message_json["errors"].each do |field,message_array|
         messages = " #{messages}\n #{field}: #{message_array.join("\n")}"
       end
-      App.alert(messages)
+      custom_message(messages)
     end
 
     def user_valid?
@@ -65,7 +64,7 @@ module Auth
     def after_conection ; end
 
     def other_error
-      App.alert("Unknow error")
+      custom_message("Unknow error")
     end
 
     ####
@@ -131,31 +130,40 @@ module Auth
         else
           message = response.error_message
         end
-        App.alert(message)
+        custom_message(message)
       end 
     end
 
     def success_conection_register
-      lambda{|response| App.alert('Good, user register. May be you need change this :-) ')}      
+      lambda{|response| custom_message('Good, user register. May be you need change this :-) ')}      
     end
 
     def success_conection_login
-     lambda{|response| App.alert('Good, user login. May be you need change this :-) ')}
+     lambda{|response| custom_message('Good, user login. May be you need change this :-) ')}
     end
+
     private 
 
     def conection(url,data)
+      @json = nil
       BW::HTTP.post(url, {payload: data} ) do |response|
         if response.ok?
           @json = parse(response)
+          success_conection_register.call(response)
         else 
           failed_conection.call(response)
+          @json = nil
         end
+        hide_waiting_view
       end
-      @json
+    end
+
+    def custom_message(string)
+      App.alert(string)
     end
 
     def parse response
+      puts response.body.class
       BW::JSON.parse(response.body)
     end 
   end

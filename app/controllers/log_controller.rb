@@ -17,6 +17,7 @@ class LogController < UIViewController
     @facebook = UIButtonGray.create([50,250],text:"Submit With Facebook")
     
     @submit_login.addTarget(self,action: :login_action,forControlEvents: UIControlEventTouchUpInside)
+    @submit_register.addTarget(self,action: :register_action,forControlEvents: UIControlEventTouchUpInside)
     @facebook.addTarget(self,action: :login_with_facebook,forControlEvents: UIControlEventTouchUpInside)
         
     view.addSubview(@submit_register)
@@ -31,14 +32,14 @@ class LogController < UIViewController
   #  format data for send to server
   ####
   def data_login_user
-    {user:{email: @email.text, password:@password.text}}
+    {user:{login: @email.text, password:@password.text}}
   end
 
   #####
   ## URL connection for login
   ######
   def url_log_in
-    "http://0.0.0.0:3000/users/login"
+    "http://auth-motion-server.herokuapp.com/users/login"
   end
 
   ######

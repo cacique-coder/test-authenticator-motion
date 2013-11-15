@@ -2,6 +2,7 @@ module Auth
   module EmailLogin
     #method that should be call it for register a user
     def register_action
+      @action = "Register"
       waiting_view
       if has_enough_data_register?
         response = conection(url_register,data_register_user)
@@ -15,6 +16,7 @@ module Auth
     #method that should be call it for log in a user
 
     def login_action
+      @action = "login"
       waiting_view
       if has_enough_data_login?
         response = conection(url_log_in,data_login_user)
@@ -31,8 +33,7 @@ module Auth
       user_valid? and password_field_simple?
     end
 
-
-    def has_enough_data?
+    def has_enough_data_register?
       if user_field.nil? or password_field.nil? or password_confirmation_field.nil? 
         raise "You need define email, password and password confirmation field"
       end
@@ -74,7 +75,6 @@ module Auth
     #   end
     ###
 
-
     def user_field
       raise "should be implemented"
     end
@@ -91,6 +91,10 @@ module Auth
       raise "should be implemented"
     end
 
+    ###
+    #   This method is a hash, how we send the data
+    #  {login: 'x', password: ''}
+    ##
     def data_login_user
       raise "data_login_user MUST BE IMPLEMENTED"
     end
@@ -126,7 +130,7 @@ module Auth
     def failed_conection
       lambda do |response|
         if response.status_code.to_s =~ /40\d/
-          message = "Login failed"
+          message = "#{@action} failed"
         else
           message = response.error_message
         end

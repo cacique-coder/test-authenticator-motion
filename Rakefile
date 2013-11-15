@@ -12,7 +12,8 @@ end
 
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
-  app.name = 'authenticator'
+  app.name = 'auth-motion'
+  app.identifier = "auth-motion"  
   app.weak_frameworks += %w{ AdSupport Accounts Social }
 
   app.info_plist['FacebookAppID'] = "492234074208492"
@@ -21,7 +22,6 @@ Motion::Project::App.setup do |app|
   app.info_plist['CFBundleURLTypes'] = [
      { 'CFBundleURLSchemes' => ["fc6931292f8b4c2528f060f321adae28"] }
    ]
-
   app.pods do
     pod 'Facebook-iOS-SDK'
   end

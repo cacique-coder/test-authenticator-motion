@@ -34,12 +34,18 @@ class LogController < UIViewController
   def data_login_user
     {user:{login: @email.text, password:@password.text}}
   end
+  def data_register_user
+    {user:{login: @email.text, password:@password.text, password_confirmation: @password.text }}
+  end
 
   #####
   ## URL connection for login
   ######
   def url_log_in
     "http://auth-motion-server.herokuapp.com/users/login"
+  end
+  def url_register
+    "http://auth-motion-server.herokuapp.com/users"
   end
 
   ######
@@ -49,7 +55,7 @@ class LogController < UIViewController
 
   def password_field ; @password ;end
 
-  def password_confirmation_field ; @password_confirmation ;end
+  def password_confirmation_field ; @password ;end
 
   ####
   #  Wating actions

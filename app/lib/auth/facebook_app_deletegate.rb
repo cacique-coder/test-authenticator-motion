@@ -4,14 +4,15 @@ module Auth
     def accountStore
       ACAccountStore.alloc.init
     end
-    def facebookAccountType
-#      accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierFacebook)
-    end
     
     def facebookAccount
       accounts = accountStore.accountsWithAccountType(facebookAccountType)
       accounts.lastObject unless accounts.nil?
-    end  
+    end
+      
+    def facebookAccountType
+      accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierFacebook)
+    end
 
     def applicationDidBecomeActive(application)
       $facebook_set = !facebookAccount.nil?

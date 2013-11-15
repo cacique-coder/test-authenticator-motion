@@ -27,7 +27,6 @@ class LogController < UIViewController
     view.addSubview(@password)
   end
 
-
   #########
   #  format data for send to server
   ####
@@ -38,6 +37,11 @@ class LogController < UIViewController
     {user:{login: @email.text, password:@password.text, password_confirmation: @password.text }}
   end
 
+  def facebook_user_data(data)
+    App.alert('Get data, Data from facebook')
+    puts " facebook data user #{data}"
+    hide_waiting_view
+  end
   #####
   ## URL connection for login
   ######

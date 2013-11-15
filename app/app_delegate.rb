@@ -6,8 +6,4 @@ class AppDelegate
     @window.rootViewController = LogController.alloc.initWithNibName(nil, bundle: nil)
     true
   end
-
-  def facebookAccountType
-    accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierFacebook)
-  end
 end

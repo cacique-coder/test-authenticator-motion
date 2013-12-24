@@ -3,7 +3,7 @@ $:.unshift("/Library/RubyMotion/lib")
 require 'motion/project/template/ios'
 
 require 'motion-cocoapods'
-
+require 'yaml'
 begin
   require 'bundler'
   Bundler.require
@@ -15,12 +15,12 @@ Motion::Project::App.setup do |app|
   app.name = 'auth-motion'
   app.identifier = "auth-motion"  
   app.weak_frameworks += %w{ AdSupport Accounts Social }
-
-  app.info_plist['FacebookAppID'] = "492234074208492"
+  social_config = YAML.load_file(File.join(File.dirname(__FILE__),'social.yaml'))
+  app.info_plist['FacebookAppID'] = social_config['facebook']['app_id']
   app.info_plist['Application requires iPhone environment']=true
-  app.info_plist['URL types'] = { 'URL Schemes' =>'fc6931292f8b4c2528f060f321adae28'}
+  app.info_plist['URL types'] = { 'URL Schemes' =>social_config['facebook']['url_scheme']}
   app.info_plist['CFBundleURLTypes'] = [
-     { 'CFBundleURLSchemes' => ["fc6931292f8b4c2528f060f321adae28"] }
+     { 'CFBundleURLSchemes' => [social_config['facebook']['url_scheme']] }
    ]
   app.pods do
     pod 'Facebook-iOS-SDK'

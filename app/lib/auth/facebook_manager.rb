@@ -2,31 +2,39 @@ module Auth
   module FacebookManager
     def login_with_facebook
       @action = 'login'
-      waiting_view
-      auth
-      unless $facebook_set
+      if facebook_account
+        waiting_view
+        auth
         hide_waiting_view
+      else
         no_facebook_set_error
-      end      
+        return false
+      end
     end
         
     def auth
       accountStore.requestAccessToAccountsWithType(facebookAccountType,options:options,completion: lambda { |granted,error|
         if (granted)
-          accounts = accountStore.accountsWithAccountType(facebookAccountType)
-          @facebookAccount = accounts.lastObject
-          me_info if is_facebook_configured?
-          $facebook_set = true
+          me_info
         else
-          $facebook_set = true
-          accounts = accountStore.accountsWithAccountType(facebookAccountType)
-          @facebookAccount = accounts.lastObject
+          custom_message error.localizedDescription
           puts error.localizedDescription
           return false
         end
       })
-    end  
+    end 
+
+    def facebook_account
+      return @facebookAccount unless @facebookAccount.nil?
+      accounts = accountStore.accountsWithAccountType(facebookAccountType)
+      puts "---> @facebook_account = #{accounts}"
+      @facebookAccount = accounts.lastObject
+    end
     
+    def exists_facebook_account
+      facebook_account
+    end
+
     def me_info
       access_token = @facebookAccount.credential.oauthToken      
       meurl = NSURL.URLWithString("https://graph.facebook.com/me")
@@ -79,10 +87,11 @@ module Auth
     end
 
     def options
+      plist = NSBundle.mainBundle.infoDictionary
       { 
-        "ACFacebookAppIdKey" => "492234074208492", 
-        "ACFacebookPermissionsKey" => ["email"], 
-        "ACFacebookAudienceKey" => "ACFacebookAudienceFriends" 
+        "ACFacebookAppIdKey" => plist['FacebookAppID'],
+        "ACFacebookPermissionsKey" => plist['ACFacebookPermissionsKey'],
+        "ACFacebookAudienceKey" => plist['ACFacebookAudienceKey']
       }
     end
     

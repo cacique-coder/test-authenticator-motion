@@ -2,7 +2,7 @@ module Auth
   module FacebookAppDeletegate
     
     def accountStore
-      ACAccountStore.alloc.init
+      @account_store ||= ACAccountStore.alloc.init
     end
     
     def facebookAccount
@@ -15,6 +15,7 @@ module Auth
     end
 
     def applicationDidBecomeActive(application)
+      puts "ALGO PASO"
       $facebook_set = !facebookAccount.nil?
       $renewed = false
       unless facebookAccount.nil?

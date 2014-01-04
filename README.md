@@ -3,9 +3,8 @@ test-authenticator-motion
 
 this is a aplication for test authentication modules. 
 
-##How use it?
+##How use it for login?
 
-  ###login
  ```ruby
 class LoginController < UIViewController
   include Auth::EmailLogin
@@ -50,10 +49,11 @@ class LoginController < UIViewController
 end
  ```
 
-####case test
+case test
   * {user: login, password: 123456}
   
-  ###Register
+##How use it for Register?
+
  ```ruby
 class LoginController < UIViewController
   include Auth::EmailLogin

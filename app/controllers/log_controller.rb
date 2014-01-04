@@ -1,5 +1,5 @@
 class LogController < UIViewController
-  include Auth::EmailLogin
+  include Authmotion::EmailLogin
   include Auth::FacebookManager
 
   def viewDidLoad
@@ -29,7 +29,7 @@ class LogController < UIViewController
 
   #########
   #  format data for send to server
-  ####
+  #########
   def data_login_user
     {user:{login: @email.text, password:@password.text}}
   end
@@ -65,12 +65,12 @@ class LogController < UIViewController
   #  Wating actions
   ####
   def waiting_view
-    @background = WaitingView.create
-    view.addSubview(@background)
+#    @background = WaitingView.create
+#    view.addSubview(@background)
   end
 
   def hide_waiting_view
-    @background.removeFromSuperview
+ #   @background.removefromsuperview
   end
 
 
